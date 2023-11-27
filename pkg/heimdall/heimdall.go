@@ -18,6 +18,8 @@ var PeriodicNotificationInterval int
 var AllContainers bool
 var Provider IProvider
 
+var IsHealthy = false
+
 func init() {
 	flag.BoolVar(&DebugMode, "debug", false, "Enable debug mode")
 
@@ -54,6 +56,7 @@ func init() {
 
 	Info("Heimdall is now running")
 	Info("Awaiting events...")
+	IsHealthy = true
 }
 
 func Start() {
@@ -76,6 +79,8 @@ func Start() {
 		go PeriodicCheckRoutine(*ticker, cli, ctx)
 	}
 
+	go StartHealthCheckServer()
+
 	for {
 		select {
 		case event := <-eventChannel:
@@ -90,8 +95,10 @@ func Start() {
 			Provider.SendContainerEventNotification(event)
 		case err := <-errorChannel:
 			if err == io.EOF {
+				IsHealthy = false
 				Warn(fmt.Sprintf("No containers running. Sleeping for %s seconds and trying again.\n", strconv.Itoa(Timeout)))
 				time.Sleep(time.Duration(Timeout * int(time.Second)))
+				IsHealthy = true
 				go EventRoutine(cli, ctx, eventChannel, logChannel, errorChannel)
 			} else {
 				Fatal(err.Error())

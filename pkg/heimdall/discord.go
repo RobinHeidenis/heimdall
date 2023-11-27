@@ -48,7 +48,7 @@ func (p DiscordProvider) SendPeriodicContainerStatusUpdate(updateTable string) {
 
 func (p DiscordProvider) SendContainerEventNotification(event ContainerEvent) {
 	message := makeWebhookMessage(event)
-	err := discordwebhook.SendMessage("https://discord.com/api/webhooks/1175980269472329748/l0GWWT729yD-uqiFtXHtlpCqO7NGv0jXhsv05_S24kKDE2WPf3egYjD3Pna8G1DXIPgR", message)
+	err := discordwebhook.SendMessage(p.WebhookURL, message)
 	if err != nil {
 		Fatal(err.Error())
 	}
