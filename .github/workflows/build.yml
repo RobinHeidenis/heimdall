@@ -17,14 +17,27 @@ jobs:
           go-version: 1.21.4
       - name: Install dependencies
         run: go mod download
+
       - name: Build heimdall for linux/amd64
         run: GOOS=linux GOARCH=amd64 go build -o dist/heimdall-linux-amd64 ./cmd/heimdall
+      - name: Upload heimdall for linux/amd64
+        uses: actions/upload-artifact@v3
+        with:
+          name: heimdall-linux-amd64
+          path: dist/heimdall-linux-amd64
+
       - name: Build heimdall for linux/arm64
         run: GOOS=linux GOARCH=arm64 go build -o dist/heimdall-linux-arm64 ./cmd/heimdall
+      - name: Upload heimdall for linux/arm64
+        uses: actions/upload-artifact@v3
+        with:
+          name: heimdall-linux-arm64
+          path: dist/heimdall-linux-arm64
+
       - name: Build heimdall for linux/arm
         run: GOOS=linux GOARCH=arm go build -o dist/heimdall-linux-arm ./cmd/heimdall
-      - name: Upload binary
-        uses: actions/upload-artifact@v2
+      - name: Upload heimdall for linux/arm
+        uses: actions/upload-artifact@v3
         with:
-          name: heimdall-binaries
-          path: dist/
+          name: heimdall-linux-arm
+          path: dist/heimdall-linux-arm
