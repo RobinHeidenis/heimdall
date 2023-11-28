@@ -1,0 +1,25 @@
+name: Build
+run-name: Build heimdall for ${{ github.actor }} on ${{ github.base.ref }}
+on: [push, pull_request]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+      - name: Install dependencies
+        run: go mod download
+      - name: Build heimdall for linux/amd64
+        run: GOOS=linux GOARCH=amd64 go build -o dist/heimdall-linux-amd64 ./cmd/heimdall
+      - name: Build heimdall for linux/arm64
+        run: GOOS=linux GOARCH=arm64 go build -o dist/heimdall-linux-arm64 ./cmd/heimdall
+      - name: Build heimdall for linux/arm
+        run: GOOS=linux GOARCH=arm go build -o dist/heimdall-linux-arm ./cmd/heimdall
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: heimdall-binaries
+          path: dist/
