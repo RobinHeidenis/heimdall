@@ -3,39 +3,48 @@ package heimdall
 import (
 	"context"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"github.com/docker/docker/client"
+	"github.com/peterbourgon/ff/v4"
+	"github.com/peterbourgon/ff/v4/ffhelp"
 	"io"
+	"os"
 	"strconv"
 	"time"
 )
 
 var DebugMode bool
-var Timeout int
 var PeriodicNotifications bool
 var PeriodicNotificationInterval int
 var AllContainers bool
+var Retry int
 var Provider IProvider
 
 var IsHealthy = false
 
 func init() {
-	flag.BoolVar(&DebugMode, "debug", false, "Enable debug mode")
+	fs := ff.NewFlagSet("heimdall")
 
-	flag.BoolVar(&PeriodicNotifications, "periodic-notification", false, "Enable periodic notifications about the state of containers")
-	flag.IntVar(&PeriodicNotificationInterval, "notification-interval", 60, "Interval in minutes between periodic notifications")
-	flag.BoolVar(&AllContainers, "all-containers", false, "Enable periodic notifications for all containers, including stopped ones")
+	fs.BoolVar(&DebugMode, 'd', "debug", "Enable debug mode")
+	fs.BoolVar(&PeriodicNotifications, 'n', "periodic-notification", "Enable periodic notifications about the state of containers")
+	fs.IntVar(&PeriodicNotificationInterval, 'i', "notification-interval", 60, "Interval in minutes between periodic notifications")
+	fs.BoolVar(&AllContainers, 'a', "all-containers", "Enable periodic notifications for all containers, including stopped ones")
+	fs.IntVar(&Retry, 'r', "retry", 10, "Retry in seconds when the docker event stream ends")
+	var provider = fs.StringEnum('p', "provider", "Provider to use for notifications", "discord")
+	var webhookUrl = fs.String('w', "webhook-url", "", "Webhook URL to use for notifications")
 
-	flag.IntVar(&Timeout, "retry", 10, "Retry in seconds when the docker event stream ends")
+	err := ff.Parse(fs, os.Args[1:], ff.WithEnvVarPrefix("HEIMDALL"))
 
-	provider := flag.String("provider", "discord", "Provider to use for notifications")
-	webhookUrl := flag.String("webhook-url", "", "Webhook URL to use for notifications")
-
-	flag.Parse()
+	if err != nil {
+		fmt.Printf("%s\n", ffhelp.Flags(fs))
+		Fatal("Something went wrong while parsing flags: " + err.Error())
+	}
 
 	if PeriodicNotifications {
 		Info(fmt.Sprintf("Periodic notifications enabled. Interval: %d minutes\n", PeriodicNotificationInterval))
+		if AllContainers {
+			Info("All containers option specified, sending notifications about all containers, including stopped ones")
+		}
 	} else {
 		if PeriodicNotificationInterval != 60 {
 			Warn("Periodic notifications disabled. Ignoring notification interval.")
@@ -96,8 +105,8 @@ func Start() {
 		case err := <-errorChannel:
 			if err == io.EOF {
 				IsHealthy = false
-				Warn(fmt.Sprintf("No containers running. Sleeping for %s seconds and trying again.\n", strconv.Itoa(Timeout)))
-				time.Sleep(time.Duration(Timeout * int(time.Second)))
+				Warn(fmt.Sprintf("No containers running. Sleeping for %s seconds and trying again.\n", strconv.Itoa(Retry)))
+				time.Sleep(time.Duration(Retry * int(time.Second)))
 				IsHealthy = true
 				go EventRoutine(cli, ctx, eventChannel, logChannel, errorChannel)
 			} else {
