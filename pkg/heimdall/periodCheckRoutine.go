@@ -2,7 +2,6 @@ package heimdall
 
 import (
 	"context"
-	"github.com/davidbanham/human_duration"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -41,30 +40,11 @@ func PeriodicCheckRoutine(ticker time.Ticker, cli *client.Client, ctx context.Co
 
 			var health = inspectedContainer.State.Status
 
-			if inspectedContainer.State.Health != nil {
+			if inspectedContainer.State.Health != nil && health != "exited" {
 				health = inspectedContainer.State.Health.Status
 			}
 
-			startTimeStr := inspectedContainer.State.StartedAt
-
-			// Parse the start time string into a time.Time object
-			startTime, err := time.Parse(time.RFC3339, startTimeStr)
-			if err != nil {
-				Fatal(err.Error())
-			}
-
-			// Calculate the uptime
-			uptime := time.Since(startTime)
-
-			c := Container{
-				ID:     listContainer.ID,
-				Name:   strings.Split(inspectedContainer.Name, "/")[1],
-				Image:  listContainer.Image,
-				Uptime: human_duration.String(uptime, human_duration.Second),
-				Health: HealthStatus(health),
-			}
-
-			t.AppendRow(table.Row{i, c.Name, c.Health})
+			t.AppendRow(table.Row{i, strings.Split(inspectedContainer.Name, "/")[1], HealthStatus(health)})
 			t.AppendSeparator()
 		}
 
