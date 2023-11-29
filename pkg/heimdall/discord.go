@@ -15,9 +15,10 @@ func New(webhookURL string) *DiscordProvider {
 	}
 }
 
+var AvatarUrl = "https://github.com/RobinHeidenis/heimdall/blob/52fe5004e0e254d2e24e574807f4879b494024fc/public/logo.png?raw=true"
+var BotName = "Heimdall"
+
 func (p DiscordProvider) SendPeriodicContainerStatusUpdate(updateTable string) {
-	username := "Heimdall"
-	avatarUrl := "https://neellik.com/wp-content/uploads/2022/03/heimdall.png"
 	authorName := "Docker Container Status"
 	authorIconUrl := "https://www.docker.com/wp-content/uploads/2023/04/cropped-Docker-favicon-32x32.png"
 	title := "Periodic status update"
@@ -35,8 +36,8 @@ func (p DiscordProvider) SendPeriodicContainerStatusUpdate(updateTable string) {
 	}}
 
 	message := discordwebhook.Message{
-		Username:  &username,
-		AvatarUrl: &avatarUrl,
+		Username:  &BotName,
+		AvatarUrl: &AvatarUrl,
 		Embeds:    &embeds,
 	}
 
@@ -139,12 +140,9 @@ func makeWebhookMessage(event ContainerEvent) discordwebhook.Message {
 		Color:       &embedColor,
 	}}
 
-	username := "Heimdall"
-	avatarUrl := "https://neellik.com/wp-content/uploads/2022/03/heimdall.png"
-
 	return discordwebhook.Message{
 		Embeds:    &embeds,
-		Username:  &username,
-		AvatarUrl: &avatarUrl,
+		Username:  &BotName,
+		AvatarUrl: &AvatarUrl,
 	}
 }

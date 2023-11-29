@@ -163,3 +163,22 @@ It uses the following technologies:
 ### Discord notifications
 #### Container started
 ![container-started.png](public/container-started.png)
+
+#### Container stopped
+![container-stopped.png](public/container-stopped.png)
+
+#### Container healthy
+![container-healthy.png](public/container-healthy.png)
+
+#### Container unhealthy
+![container-unhealthy.png](public/container-unhealthy.png)
+
+#### Container errored
+![container-errored.png](public/container-errored.png)
+
+### Periodic notification
+#### Running containers
+![container-list.png](public/container-list.png)
+
+#### All containers
+![container-list-all.png](public/container-list-all.png)
