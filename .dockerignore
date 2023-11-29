@@ -1,5 +1,9 @@
 .dockerignore
 .gitignore
-Dockerfile
+Dockerfile-build-standalone
 README.md
 heimdall
+Dockerfile
+.goreleaser.yaml
+dist
+.github
