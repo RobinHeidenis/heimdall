@@ -66,7 +66,7 @@ dockers:
       - "drfractum/{{ .ProjectName }}:{{ .Version }}-amd64"
       - "drfractum/{{ .ProjectName }}:{{ .Major }}-amd64"
       - "drfractum/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}-amd64"
-      - "drfractum/[{ .ProjectName }}:latest-amd64"
+      - "drfractum/{{ .ProjectName }}:latest-amd64"
     dockerfile: Dockerfile
     build_flag_templates:
       - "--platform=linux/amd64"
@@ -81,7 +81,7 @@ dockers:
       - "drfractum/{{ .ProjectName }}:{{ .Version }}-arm64v8"
       - "drfractum/{{ .ProjectName }}:{{ .Major }}-arm64v8"
       - "drfractum/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}-arm64v8"
-      - "drfractum/[{ .ProjectName }}:latest-arm64v8"
+      - "drfractum/{{ .ProjectName }}:latest-arm64v8"
     dockerfile: Dockerfile
     build_flag_templates:
       - "--platform=linux/arm64/v8"
@@ -96,7 +96,7 @@ dockers:
       - "drfractum/{{ .ProjectName }}:{{ .Version }}-armv6"
       - "drfractum/{{ .ProjectName }}:{{ .Major }}-armv6"
       - "drfractum/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}-armv6"
-      - "drfractum/[{ .ProjectName }}:latest-armv6"
+      - "drfractum/{{ .ProjectName }}:latest-armv6"
     dockerfile: Dockerfile
     build_flag_templates:
       - "--platform=linux/arm/v6"
@@ -112,7 +112,7 @@ dockers:
       - "drfractum/{{ .ProjectName }}:{{ .Version }}-armv7"
       - "drfractum/{{ .ProjectName }}:{{ .Major }}-armv7"
       - "drfractum/{{ .ProjectName }}:{{ .Major }}.{{ .Minor }}-armv7"
-      - "drfractum/[{ .ProjectName }}:latest-armv7"
+      - "drfractum/{{ .ProjectName }}:latest-armv7"
     dockerfile: Dockerfile
     build_flag_templates:
       - "--platform=linux/arm/v7"
