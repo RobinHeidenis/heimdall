@@ -9,6 +9,7 @@
 [![Docker](https://img.shields.io/badge/docker_images-%231d63ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/drfractum/heimdall)
 [![GitHub Releases](https://img.shields.io/badge/github%20releases-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/RobinHeidenis/heimdall/releases)
 
+<h4>Status badges</h4>
 <div>
 
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/drfractum/heimdall/latest?style=for-the-badge&logo=docker&logoColor=white)
