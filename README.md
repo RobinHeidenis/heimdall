@@ -153,7 +153,7 @@ sudo ln -s ~/.docker/desktop/docker.sock /var/run/docker.sock
 ```
 
 ## Customisation
-Heimdall can be customised by using the following environment variables:
+Heimdall can be customised by using flags or environment variables. Either works, but flags take precedence over environment variables. Short flags can be used in place of the longer flags to save some typing.
 
 | Long flag                 | Short flag | Environment Variable             | Default   | Required                                                                                         | Explanation                                                                                      |
 |---------------------------|------------|----------------------------------|-----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
