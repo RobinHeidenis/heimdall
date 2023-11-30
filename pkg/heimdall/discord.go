@@ -15,7 +15,7 @@ func New(webhookURL string) *DiscordProvider {
 	}
 }
 
-var AvatarUrl = "https://github.com/RobinHeidenis/heimdall/blob/52fe5004e0e254d2e24e574807f4879b494024fc/public/logo.png?raw=true"
+var AvatarUrl = "https://raw.githubusercontent.com/RobinHeidenis/heimdall/main/public/logo.png"
 var BotName = "Heimdall"
 
 func (p DiscordProvider) SendPeriodicContainerStatusUpdate(updateTable string) {
