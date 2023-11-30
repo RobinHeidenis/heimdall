@@ -123,12 +123,12 @@ To run Heimdall as a standalone application, you can download the latest release
 
 Be sure to download the right binary for your operating system.
 
-| Platform                                                                                                 | Binary                  |
-|----------------------------------------------------------------------------------------------------------|-------------------------|
-| ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)       | heimdall_Linux_x86_64   |
-| ![Raspberry Pi](https://img.shields.io/badge/-RaspberryPi-C51A4A?style=for-the-badge&logo=Raspberry-Pi)  | heimdall_Linux_armv7    |
-| ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white) | heimdall_Windows_x86_64 |
-| ![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)   | heimdall_Darwin_x86_64  |
+| Platform                                                                                                 | Binary                        |
+|----------------------------------------------------------------------------------------------------------|-------------------------------|
+| ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)       | heimdall_Linux_x86_64         |
+| ![Raspberry Pi](https://img.shields.io/badge/-RaspberryPi-C51A4A?style=for-the-badge&logo=Raspberry-Pi)  | heimdall_Linux_armv7          |
+| ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white) | heimdall_Windows_x86_64       |
+| ![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)   | heimdall_Darwin_x86_64        |
 
 Other binaries are available in case you have a different architecture or operating system.
 Other binaries are available in case you have a different architecture or operating system.
@@ -153,7 +153,7 @@ sudo ln -s ~/.docker/desktop/docker.sock /var/run/docker.sock
 ```
 
 ## Customisation
-Heimdall can be customised by using the following environment variables:
+Heimdall can be customised by using flags or environment variables. Either works, but flags take precedence over environment variables. Short flags can be used in place of the longer flags to save some typing.
 
 | Long flag                 | Short flag | Environment Variable             | Default   | Required                                                                                         | Explanation                                                                                      |
 |---------------------------|------------|----------------------------------|-----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
