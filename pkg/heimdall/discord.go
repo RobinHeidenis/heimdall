@@ -15,11 +15,25 @@ func New(webhookURL string) *DiscordProvider {
 	}
 }
 
-var AvatarUrl = "https://raw.githubusercontent.com/RobinHeidenis/heimdall/main/public/logo.png"
-var BotName = "Heimdall"
+var avatarUrl = "https://raw.githubusercontent.com/RobinHeidenis/heimdall/main/public/logo.png"
+var botName = "Heimdall"
+
+var footerText = "Sent by Heimdall"
+
+var footer = discordwebhook.Footer{
+	Text: &footerText,
+}
+
+func getHostnameAdditionText() string {
+	hostnameAddition := ""
+	if Hostname != "" {
+		hostnameAddition = fmt.Sprintf(" (%s)", Hostname)
+	}
+	return hostnameAddition
+}
 
 func (p DiscordProvider) SendPeriodicContainerStatusUpdate(updateTable string) {
-	authorName := "Docker Container Status"
+	authorName := "Docker Container Status" + getHostnameAdditionText()
 	authorIconUrl := "https://www.docker.com/wp-content/uploads/2023/04/cropped-Docker-favicon-32x32.png"
 	title := "Periodic status update"
 	description := fmt.Sprintf("```\n%s```", updateTable)
@@ -33,11 +47,12 @@ func (p DiscordProvider) SendPeriodicContainerStatusUpdate(updateTable string) {
 		Author:      &author,
 		Title:       &title,
 		Description: &description,
+		Footer:      &footer,
 	}}
 
 	message := discordwebhook.Message{
-		Username:  &BotName,
-		AvatarUrl: &AvatarUrl,
+		Username:  &botName,
+		AvatarUrl: &avatarUrl,
 		Embeds:    &embeds,
 	}
 
@@ -66,19 +81,19 @@ func makeWebhookMessage(event ContainerEvent) discordwebhook.Message {
 	var title string
 	switch event.Container.Health {
 	case Running:
-		title = fmt.Sprintf("Container %s has started", event.Container.Name)
+		title = fmt.Sprintf("%s has started", event.Container.Name)
 		if event.Event == UnpausedEvent {
-			title = fmt.Sprintf("Container %s has been unpaused", event.Container.Name)
+			title = fmt.Sprintf("%s has been unpaused", event.Container.Name)
 		}
 	case Exited:
-		title = fmt.Sprintf("Container %s has stopped", event.Container.Name)
+		title = fmt.Sprintf("%s has stopped", event.Container.Name)
 	case Paused:
-		title = fmt.Sprintf("Container %s has been paused", event.Container.Name)
+		title = fmt.Sprintf("%s has been paused", event.Container.Name)
 	case Errored:
-		title = fmt.Sprintf("Container %s has errored", event.Container.Name)
+		title = fmt.Sprintf("%s has errored", event.Container.Name)
 		description = fmt.Sprintf("`%s`'s status is now `%s` with exit code `%d`", event.Container.Name, "Stopped", event.ExitCode)
 	default:
-		title = fmt.Sprintf("Container %s is %s", event.Container.Name, event.Container.Health)
+		title = fmt.Sprintf("%s is %s", event.Container.Name, event.Container.Health)
 	}
 
 	idFieldName := "ID:"
@@ -103,18 +118,12 @@ func makeWebhookMessage(event ContainerEvent) discordwebhook.Message {
 		fields = append(fields, discordwebhook.Field{Name: &errorFieldName, Value: &event.Error})
 	}
 
-	authorName := "Docker Container Status Update"
+	authorName := "Docker Container Status Update" + getHostnameAdditionText()
 	iconUrl := "https://www.docker.com/wp-content/uploads/2023/04/cropped-Docker-favicon-32x32.png"
 
 	author := discordwebhook.Author{
 		Name:    &authorName,
 		IconUrl: &iconUrl,
-	}
-
-	footerText := "Sent by Heimdall"
-
-	footer := discordwebhook.Footer{
-		Text: &footerText,
 	}
 
 	var embedColor = "0"
@@ -142,7 +151,7 @@ func makeWebhookMessage(event ContainerEvent) discordwebhook.Message {
 
 	return discordwebhook.Message{
 		Embeds:    &embeds,
-		Username:  &BotName,
-		AvatarUrl: &AvatarUrl,
+		Username:  &botName,
+		AvatarUrl: &avatarUrl,
 	}
 }

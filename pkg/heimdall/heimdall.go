@@ -14,11 +14,16 @@ import (
 )
 
 var DebugMode bool
+
 var PeriodicNotifications bool
 var PeriodicNotificationInterval int
 var AllContainers bool
+
 var Retry int
+
 var Provider IProvider
+
+var Hostname string
 
 var IsHealthy = false
 
@@ -30,6 +35,7 @@ func init() {
 	fs.IntVar(&PeriodicNotificationInterval, 'i', "notification-interval", 60, "Interval in minutes between periodic notifications")
 	fs.BoolVar(&AllContainers, 'a', "all-containers", "Enable periodic notifications for all containers, including stopped ones")
 	fs.IntVar(&Retry, 'r', "retry", 10, "Retry in seconds when the docker event stream ends")
+	fs.StringVar(&Hostname, 'h', "hostname", "", "Hostname to use in notifications. Useful when running multiple instances of Heimdall")
 	var provider = fs.StringEnum('p', "provider", "Provider to use for notifications", "discord")
 	var webhookUrl = fs.String('w', "webhook-url", "", "Webhook URL to use for notifications")
 

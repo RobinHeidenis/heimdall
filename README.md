@@ -72,6 +72,7 @@
                     <li><a href="#running-containers">Running containers</a></li>
                     <li><a href="#all-containers">All containers</a></li>
                 </ul>
+                <li><a href="#notifications-with-a-hostname">Notifications with a hostname</a></li>
             </ul>
         </li>
       </ol>
@@ -131,8 +132,6 @@ Be sure to download the right binary for your operating system.
 | ![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)   | heimdall_Darwin_x86_64  |
 
 Other binaries are available in case you have a different architecture or operating system.
-Other binaries are available in case you have a different architecture or operating system.
-
 
 After downloading the release, you can run it by executing the following command:
 ```bash
@@ -155,15 +154,16 @@ sudo ln -s ~/.docker/desktop/docker.sock /var/run/docker.sock
 ## Customisation
 Heimdall can be customised by using flags or environment variables. Either works, but flags take precedence over environment variables. Short flags can be used in place of the longer flags to save some typing.
 
-| Long flag                 | Short flag | Environment Variable             | Default   | Required                                                                                         | Explanation                                                                                      |
-|---------------------------|------------|----------------------------------|-----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| `--periodic-notification` | `-n`       | `HEIMDALL_PERIODIC_NOTIFICATION` | `false`   | No                                                                                               | Enable periodic notifications                                                                    |
-| `--notification-interval` | `-i`       | `HEIMDALL_NOTIFICATION_INTERVAL` | `60`      | Only if periodic notifications are enabled and you want a different value than default           | How often (in minutes) periodic notifications should be sent                                     |
-| `--all-containers`        | `-a`       | `HEIMDALL_ALL_CONTAINERS`        | `false`   | Only if periodic notifications are enabled and you want periodic notifications on all containers | Enable periodic notification reporting on all containers, including stopped ones                 |
-| `--retry`                 | `-r`       | `HEIMDALL_RETRY`                 | `10`      | No                                                                                               | How long Heimdall should sleep before retrying in case the Docker event stream ends unexpectedly |
-| `--provider`              | `-p`       | `HEIMDALL_PROVIDER`              | `discord` | No                                                                                               | What notification provider should be used. Possible values: `discord`                            |
-| `--webhook-url`           | `-w`       | `HEIMDALL_WEBHOOK_URL`           | -         | Yes                                                                                              | What URL Heimdall should use to send notifications to                                            |
-| `--debug`                 | `-d`       | `HEIMDALL_DEBUG`                 | `false`   | No                                                                                               | Enable extra debug messages                                                                      |
+| Long flag                 | Short flag | Environment Variable             | Default   | Required                                                                                         | Explanation                                                                                                                                                            |
+|---------------------------|------------|----------------------------------|-----------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--periodic-notification` | `-n`       | `HEIMDALL_PERIODIC_NOTIFICATION` | `false`   | No                                                                                               | Enable periodic notifications                                                                                                                                          |
+| `--notification-interval` | `-i`       | `HEIMDALL_NOTIFICATION_INTERVAL` | `60`      | Only if periodic notifications are enabled and you want a different value than default           | How often (in minutes) periodic notifications should be sent                                                                                                           |
+| `--all-containers`        | `-a`       | `HEIMDALL_ALL_CONTAINERS`        | `false`   | Only if periodic notifications are enabled and you want periodic notifications on all containers | Enable periodic notification reporting on all containers, including stopped ones                                                                                       |
+| `--retry`                 | `-r`       | `HEIMDALL_RETRY`                 | `10`      | No                                                                                               | How long Heimdall should sleep before retrying in case the Docker event stream ends unexpectedly                                                                       |
+| `--provider`              | `-p`       | `HEIMDALL_PROVIDER`              | `discord` | No                                                                                               | What notification provider should be used. Possible values: `discord`                                                                                                  |
+| `--webhook-url`           | `-w`       | `HEIMDALL_WEBHOOK_URL`           | -         | Yes                                                                                              | What URL Heimdall should use to send notifications to                                                                                                                  |
+| `--hostname`              | `-h`       | `HEIMDALL_HOSTNAME`              | -         | No, but recommended in case you run Heimdall on multiple devices                                 | The name of the host Heimdall is running on. This will cause Heimdall to send status updates with the device name in them: `Docker Container Status Update (Hostname)` |
+| `--debug`                 | `-d`       | `HEIMDALL_DEBUG`                 | `false`   | No                                                                                               | Enable extra debug messages                                                                                                                                            |
 
 
 ## Technologies
@@ -214,3 +214,6 @@ It uses the following technologies:
 
 #### All containers
 ![container-list-all.png](public/container-list-all.png)
+
+### Notifications with a hostname
+![notifications-with-hostname.png](public/notifications-with-hostname.png)
