@@ -3,6 +3,7 @@ package heimdall
 import (
 	"fmt"
 	"github.com/gtuk/discordwebhook"
+	"time"
 )
 
 type DiscordProvider struct {
@@ -32,11 +33,11 @@ func getHostnameAdditionText() string {
 	return hostnameAddition
 }
 
-func (p DiscordProvider) SendPeriodicContainerStatusUpdate(updateTable string) {
+func (p DiscordProvider) SendPeriodicContainerStatusUpdate(updateTable string, nextInvocation time.Time) {
 	authorName := "Docker Container Status" + getHostnameAdditionText()
 	authorIconUrl := "https://www.docker.com/wp-content/uploads/2023/04/cropped-Docker-favicon-32x32.png"
 	title := "Periodic status update"
-	description := fmt.Sprintf("```\n%s```", updateTable)
+	description := fmt.Sprintf("```\n%s```\nNext notification at <t:%d:f>, <t:%d:R>", updateTable, nextInvocation.Unix(), nextInvocation.Unix())
 
 	author := discordwebhook.Author{
 		Name:    &authorName,
