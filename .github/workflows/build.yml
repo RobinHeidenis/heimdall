@@ -1,10 +1,13 @@
 name: Build
-run-name: Build heimdall for ${{ github.actor }} on ${{ github.base.ref }}
+run-name: Build Heimdall
 on:
   push:
     branches-ignore:
       - main
-  workflow_call:
+    paths:
+      - 'cmd/**'
+      - 'internal/**'
+      - 'pkg/**'
 jobs:
   build:
     name: Build

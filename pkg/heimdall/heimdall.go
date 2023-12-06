@@ -7,6 +7,7 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/peterbourgon/ff/v4"
 	"github.com/peterbourgon/ff/v4/ffhelp"
+	"github.com/robfig/cron/v3"
 	"io"
 	"os"
 	"strconv"
@@ -17,6 +18,7 @@ var DebugMode bool
 
 var PeriodicNotifications bool
 var PeriodicNotificationInterval int
+var PeriodicNotificationSchedule string
 var AllContainers bool
 
 var Retry int
@@ -33,6 +35,7 @@ func init() {
 	fs.BoolVar(&DebugMode, 'd', "debug", "Enable debug mode")
 	fs.BoolVar(&PeriodicNotifications, 'n', "periodic-notification", "Enable periodic notifications about the state of containers")
 	fs.IntVar(&PeriodicNotificationInterval, 'i', "notification-interval", 60, "Interval in minutes between periodic notifications")
+	fs.StringVar(&PeriodicNotificationSchedule, 's', "notification-schedule", "@hourly", "Cron schedule for periodic notifications")
 	fs.BoolVar(&AllContainers, 'a', "all-containers", "Enable periodic notifications for all containers, including stopped ones")
 	fs.IntVar(&Retry, 'r', "retry", 10, "Retry in seconds when the docker event stream ends")
 	fs.StringVar(&Hostname, 'h', "hostname", "", "Hostname to use in notifications. Useful when running multiple instances of Heimdall")
@@ -50,6 +53,12 @@ func init() {
 		Info(fmt.Sprintf("Periodic notifications enabled. Interval: %d minutes\n", PeriodicNotificationInterval))
 		if AllContainers {
 			Info("All containers option specified, sending notifications about all containers, including stopped ones")
+		}
+		if PeriodicNotificationInterval != 60 {
+			Warn("The periodic notification interval parameter is deprecated. Use --notification-schedule instead")
+			if PeriodicNotificationSchedule != "" {
+				Warn("--notification-schedule is specified. This overwrites the periodic notification interval parameter")
+			}
 		}
 	} else {
 		if PeriodicNotificationInterval != 60 {
@@ -89,9 +98,19 @@ func Start() {
 	go EventRoutine(cli, ctx, eventChannel, logChannel, errorChannel)
 
 	if PeriodicNotifications {
-		ticker := time.NewTicker(time.Duration(PeriodicNotificationInterval) * time.Minute)
+		c := cron.New()
 
-		go PeriodicCheckRoutine(*ticker, cli, ctx)
+		var interval = "@every " + strconv.Itoa(PeriodicNotificationInterval) + "m"
+		if PeriodicNotificationSchedule != "" {
+			interval = PeriodicNotificationSchedule
+		}
+
+		id, err := c.AddFunc(interval, func() { PeriodicCheckRoutine(cli, ctx, c) })
+		if err != nil {
+			Error(err.Error())
+		}
+		c.Start()
+		c.Entry(id).Job.Run()
 	}
 
 	go StartHealthCheckServer()
@@ -122,5 +141,4 @@ func Start() {
 			Debug(logLine)
 		}
 	}
-
 }
